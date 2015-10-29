@@ -1,5 +1,4 @@
 # Blackjack - A text-based thrill-ride
-# Version 1.01
 # Copyright 2015 Jeff Walters
 #
 #
