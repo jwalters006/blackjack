@@ -1,7 +1,6 @@
 # Blackjack - A text-based thrill-ride
 # Copyright 2015 Jeff Walters
 #
-#
 #   This is my first actual program.
 #   It's a valiant attempt at a text version of blackjack.
 #   Please do not laugh too hard at any of this.
@@ -22,12 +21,12 @@
             -- Allow for a wallet and betting on each hand
 """
 
-
-import random
 # for shuffling
+import random
 
 
-
+# Create list of every card in a deck, with possible values as second component,
+# in a tuple.  Aces all have a third item in the tuple as the alternate low value.
 deck = [('Ace of Clubs', 11, 1), ('Ace of Spades', 11, 1), ('Ace of Diamonds', 11, 1), ('Ace of Hearts', 11, 1),
 ('Two of Clubs', 2), ('Two of Spades', 2), ('Two of Diamonds', 2), ('Two of Hearts', 2),
 ('Three of Clubs', 3), ('Three of Spades', 3), ('Three of Diamonds', 3), ('Three of Hearts', 3),
@@ -41,8 +40,7 @@ deck = [('Ace of Clubs', 11, 1), ('Ace of Spades', 11, 1), ('Ace of Diamonds', 1
 ('Jack of Clubs', 10), ('Jack of Spades', 10), ('Jack of Diamonds', 10), ('Jack of Hearts', 10),
 ('Queen of Clubs', 10), ('Queen of Spades', 10), ('Queen of Diamonds', 10), ('Queen of Hearts', 10),
 ('King of Clubs', 10), ('King of Spades', 10), ('King of Diamonds', 10), ('King of Hearts', 10)]
-# Create list of every card in a deck, with possible values as second component,
-# in a tuple.  Aces all have a third item in the tuple as the alternate low value.
+
 
 def handDisplay():
     print('\n\n', dash,'\nYour hand:\n', sep='')
@@ -53,6 +51,7 @@ def handDisplay():
     print(space, 'Unknown')
     print(dash)
 
+
 def fullhandDisplay():
     print('\n\n', dash,'\nYour hand:\n', sep='')
     for x in player_hand:
@@ -61,31 +60,37 @@ def fullhandDisplay():
     for x in opponent_hand:
         print(space, x[0])
     print(dash)
-
-while True:
+    
+    
 # Wrap everything in a while loop
+while True:
 
+    # Create clean copy of deck to be used for game.
     game_deck = deck.copy()
-# Create clean copy of deck to be used for game.
 
+
+    # Initiate empty hands for player and dealer.
     player_hand = []
     opponent_hand = []
-# Initiate empty hands for player and dealer.
 
+    # Begin by shuffling entire deck.
     random.shuffle(game_deck)
-# Begin by shuffling entire deck.
 
 
+    # Take 4 cards away from game deck, two to player, and the other two to dealer.
     for x in 'xx':
         player_hand.append(game_deck.pop(0))
 
     for x in 'xx':
         opponent_hand.append(game_deck.pop(0))
-# Take 4 cards away from game deck, two to player, and the other two to dealer.
+
     dash = '-' * 50
     space = ' ' * 25
     handDisplay()
 
+
+    # Look at values of each card in both sides' hands, build them into lists, and
+    # then sum the lists.
     l = []
     for x in range(len(player_hand)):
         l.append(player_hand[x][1])
@@ -108,12 +113,17 @@ while True:
     M = sum(m)
 
 
-# Look at values of each card in both sides' hands, build them into lists, and
-# then sum the lists.
+
 
     print('\n\nYour hand is worth', L, 'points.')
     print('\nDealer\'s hand so far shows', opponent_hand[0][1], 'points.')
 
+
+
+    # This code prompts the player to hit or to stay.  If the player elects to hit, another card is popped off
+    # the game deck and put into the player's hand.  There are "if tests" to detect if the card is an Ace.  If the
+    # card is detected as being an Ace, it is set to a low Ace if the current hand points total is higher than 12,
+    # to avoid busting.
     while L < 22:
         decision = input('\nType "H" to hit.  Type "S" to stand.')
         if decision.upper() == 'H':
@@ -139,21 +149,12 @@ while True:
             input('Press enter to continue...')
             break
         L = sum(l)
- # The above code prompts the player to hit or to stay.  If the player elects to hit, another card is popped off
- # the game deck and put into the player's hand.  There are "if tests" to detect if the card is an Ace.  If the
- # card is detected as being an Ace, it is set to a low Ace if the current hand points total is higher than 12,
- # to avoid busting.
 
 
-
-
-
+    # If, after all of the preceding events have left a player with a hand over 21, this prints a "losing" message.  
     if L > 21:
         print('With', L, 'points, you bust!')
- # If, after all of the preceding events have left a player with a hand over 21, this prints a "losing" message.       
-
-
-
+     
         
     else:
         print('\nDealer\'s other card is a', opponent_hand[1][0])
@@ -164,6 +165,10 @@ while True:
 
         print('\n')
 
+
+        # This section of code evaluates and prints out pertinent details of the dealer's hand.  The dealer will hit on hands
+        # below 18.  This code also accounts for low and high values of aces, and will adjust them accordingly for the highest point
+        # total possible without busting.
         while M < 22:
             if M > 17:
                 print('Dealer stands.')
@@ -191,11 +196,9 @@ while True:
             M = sum(m)
             print('Dealer\'s hand now shows', M, 'points against your hand of', L, 'points.')
             input('\nPress enter to continue...\n')
-# This section of code evaluates and prints out pertinent details of the dealer's hand.  The dealer will hit on hands
-# below 18.  This code also accounts for low and high values of aces, and will adjust them accordingly for the highest point
-# total possible without busting.
 
-         
+
+    # This code evaluates final scores once more and prints an appropriate message.       
     if 22 > L == M:
         print('\nPush!')
     elif 22 > L > M:
@@ -206,11 +209,11 @@ while True:
         print('\nYou lose...')
     elif M > 21:
         print('\nDealer busts! You win!!!')
-# This code evaluates final scores once more and prints an appropriate message.        
-
+       
+    # Finally, the game asks if you wish to continue and exits on a 'q' or a 'Q'.
     another = input('\nWant to quit? If so, type "Q".  Press enter to continue with another game.')
     if another.upper() == 'Q':
         print('Thanks for playing!')
         break
-# Finally, the game asks if you wish to continue and exits on a 'q' or a 'Q'.
+
         
