@@ -8,19 +8,14 @@ import random
 
 # Create list of every card in a deck, with possible values as second component,
 # in a tuple.  Aces all have a third item in the tuple as the alternate low value.
-deck = [('Ace of Clubs', 11, 1), ('Ace of Spades', 11, 1), ('Ace of Diamonds', 11, 1), ('Ace of Hearts', 11, 1),
-('Two of Clubs', 2, 2), ('Two of Spades', 2, 2), ('Two of Diamonds', 2, 2), ('Two of Hearts', 2, 2),
-('Three of Clubs', 3, 3), ('Three of Spades', 3, 3), ('Three of Diamonds', 3, 3), ('Three of Hearts', 3, 3),
-('Four of Clubs', 4, 4), ('Four of Spades', 4, 4), ('Four of Diamonds', 4, 4), ('Four of Hearts', 4, 4),
-('Five of Clubs', 5, 5), ('Five of Spades', 5, 5), ('Five of Diamonds', 5, 5), ('Five of Hearts', 5, 5),
-('Six of Clubs', 6, 6), ('Six of Spades', 6, 6), ('Six of Diamonds', 6, 6), ('Six of Hearts', 6, 6),
-('Seven of Clubs', 7, 7), ('Seven of Spades', 7, 7), ('Seven of Diamonds', 7, 7), ('Seven of Hearts', 7, 7),
-('Eight of Clubs', 8, 8), ('Eight of Spades', 8, 8), ('Eight of Diamonds', 8, 8), ('Eight of Hearts', 8, 8),
-('Nine of Clubs', 9, 9), ('Nine of Spades', 9, 9), ('Nine of Diamonds', 9, 9), ('Nine of Hearts', 9, 9),
-('Ten of  Clubs', 10, 10), ('Ten of Spades', 10, 10), ('Ten of Diamonds', 10, 10), ('Ten of Hearts', 10, 10),
-('Jack of Clubs', 10, 10), ('Jack of Spades', 10, 10), ('Jack of Diamonds', 10, 10), ('Jack of Hearts', 10, 10),
-('Queen of Clubs', 10, 10), ('Queen of Spades', 10, 10), ('Queen of Diamonds', 10, 10), ('Queen of Hearts', 10, 10),
-('King of Clubs', 10, 10), ('King of Spades', 10, 10), ('King of Diamonds', 10, 10), ('King of Hearts', 10, 10)]
+suits = ['Clubs', 'Spades', 'Diamonds', 'Hearts']
+cards = [('Ace', 11, 1), ('Two', 2, 2), ('Three', 3, 3), ('Four', 4, 4),
+         ('Five', 5, 5), ('Six', 6, 6), ('Seven', 7, 7), ('Eight', 8, 8),
+         ('Nine', 9, 9), ('Ten', 10, 10), ('Jack', 10, 10), ('Queen', 10, 10),
+         ('King', 10, 10)]
+deck = [(card[0] + ' of '+ suit, card[1], card[2]) for
+        card in cards for suit in suits]
+
 
 # Create line of dashes
 LINE_OF_DASHES = '-' * 50
