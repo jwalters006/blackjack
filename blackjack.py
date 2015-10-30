@@ -1,25 +1,6 @@
 # Blackjack - A text-based thrill-ride
 # Copyright 2015 Jeff Walters
-#
-#   This is my first actual program.
-#   It's a valiant attempt at a text version of blackjack.
-#   Please do not laugh too hard at any of this.
-#   We all have to start somewhere!
 
-# I'm starting out by trying to make a list that contains embedded tuples
-# which represent each card and its corresponding value.
-
-
-""" Version history/changes:
-       1.00 (10/08/15) Initial game (incomplete logic for Aces)
-       1.01 (10/15/15)
-                -- Fixed the behavior of Aces so that they can equal 1 or 11, based on the hand's point total
-                -- Wrapped the display of player and opponent hand into a function, and call the function each draw
-
-    To-Do:
-            -- Allow for a Jack/Ace combo to win automatically ("Blackjack")
-            -- Allow for a wallet and betting on each hand
-"""
 
 # for shuffling
 import random
@@ -28,38 +9,47 @@ import random
 # Create list of every card in a deck, with possible values as second component,
 # in a tuple.  Aces all have a third item in the tuple as the alternate low value.
 deck = [('Ace of Clubs', 11, 1), ('Ace of Spades', 11, 1), ('Ace of Diamonds', 11, 1), ('Ace of Hearts', 11, 1),
-('Two of Clubs', 2), ('Two of Spades', 2), ('Two of Diamonds', 2), ('Two of Hearts', 2),
-('Three of Clubs', 3), ('Three of Spades', 3), ('Three of Diamonds', 3), ('Three of Hearts', 3),
-('Four of Clubs', 4), ('Four of Spades', 4), ('Four of Diamonds', 4), ('Four of Hearts', 4),
-('Five of Clubs', 5), ('Five of Spades', 5), ('Five of Diamonds', 5), ('Five of Hearts', 5),
-('Six of Clubs', 6), ('Six of Spades', 6), ('Six of Diamonds', 6), ('Six of Hearts', 6),
-('Seven of Clubs', 7), ('Seven of Spades', 7), ('Seven of Diamonds', 7), ('Seven of Hearts', 7),
-('Eight of Clubs', 8), ('Eight of Spades', 8), ('Eight of Diamonds', 8), ('Eight of Hearts', 8),
-('Nine of Clubs', 9), ('Nine of Spades', 9), ('Nine of Diamonds', 9), ('Nine of Hearts', 9),
-('Ten of  Clubs', 10), ('Ten of Spades', 10), ('Ten of Diamonds', 10), ('Ten of Hearts', 10),
-('Jack of Clubs', 10), ('Jack of Spades', 10), ('Jack of Diamonds', 10), ('Jack of Hearts', 10),
-('Queen of Clubs', 10), ('Queen of Spades', 10), ('Queen of Diamonds', 10), ('Queen of Hearts', 10),
-('King of Clubs', 10), ('King of Spades', 10), ('King of Diamonds', 10), ('King of Hearts', 10)]
+('Two of Clubs', 2, 2), ('Two of Spades', 2, 2), ('Two of Diamonds', 2, 2), ('Two of Hearts', 2, 2),
+('Three of Clubs', 3, 3), ('Three of Spades', 3, 3), ('Three of Diamonds', 3, 3), ('Three of Hearts', 3, 3),
+('Four of Clubs', 4, 4), ('Four of Spades', 4, 4), ('Four of Diamonds', 4, 4), ('Four of Hearts', 4, 4),
+('Five of Clubs', 5, 5), ('Five of Spades', 5, 5), ('Five of Diamonds', 5, 5), ('Five of Hearts', 5, 5),
+('Six of Clubs', 6, 6), ('Six of Spades', 6, 6), ('Six of Diamonds', 6, 6), ('Six of Hearts', 6, 6),
+('Seven of Clubs', 7, 7), ('Seven of Spades', 7, 7), ('Seven of Diamonds', 7, 7), ('Seven of Hearts', 7, 7),
+('Eight of Clubs', 8, 8), ('Eight of Spades', 8, 8), ('Eight of Diamonds', 8, 8), ('Eight of Hearts', 8, 8),
+('Nine of Clubs', 9, 9), ('Nine of Spades', 9, 9), ('Nine of Diamonds', 9, 9), ('Nine of Hearts', 9, 9),
+('Ten of  Clubs', 10, 10), ('Ten of Spades', 10, 10), ('Ten of Diamonds', 10, 10), ('Ten of Hearts', 10, 10),
+('Jack of Clubs', 10, 10), ('Jack of Spades', 10, 10), ('Jack of Diamonds', 10, 10), ('Jack of Hearts', 10, 10),
+('Queen of Clubs', 10, 10), ('Queen of Spades', 10, 10), ('Queen of Diamonds', 10, 10), ('Queen of Hearts', 10, 10),
+('King of Clubs', 10, 10), ('King of Spades', 10, 10), ('King of Diamonds', 10, 10), ('King of Hearts', 10, 10)]
+
+# Create line of dashes
+LINE_OF_DASHES = '-' * 50
+    
+# Create spacing
+LINE_OF_SPACES = ' ' * 25
 
 
+# Create function to print player's opening hand as well as the dealer's hand
+# (only one dealer card turned over)
 def handDisplay():
-    print('\n\n', dash,'\nYour hand:\n', sep='')
+    print('\n\n', LINE_OF_DASHES,'\nYour hand:\n', sep='')
     for x in player_hand:
-        print(space, x[0])
+        print(LINE_OF_SPACES, x[0])
     print("\n\nDealer's hand:\n")
-    print(space, opponent_hand[0][0])
-    print(space, 'Unknown')
-    print(dash)
+    print(LINE_OF_SPACES, opponent_hand[0][0])
+    print(LINE_OF_SPACES, 'Unknown')
+    print(LINE_OF_DASHES)
 
-
+# Create function to print player's full hand as well as the dealer's full
+# hand
 def fullhandDisplay():
-    print('\n\n', dash,'\nYour hand:\n', sep='')
+    print('\n\n', LINE_OF_DASHES,'\nYour hand:\n', sep='')
     for x in player_hand:
-        print(space, x[0])
+        print(LINE_OF_SPACES, x[0])
     print("\n\nDealer's hand:\n")
     for x in opponent_hand:
-        print(space, x[0])
-    print(dash)
+        print(LINE_OF_SPACES, x[0])
+    print(LINE_OF_DASHES)
     
     
 # Wrap everything in a while loop
@@ -78,14 +68,12 @@ while True:
 
 
     # Take 4 cards away from game deck, two to player, and the other two to dealer.
-    for x in 'xx':
+    for _ in range(2):
         player_hand.append(game_deck.pop(0))
-
-    for x in 'xx':
         opponent_hand.append(game_deck.pop(0))
-
-    dash = '-' * 50
-    space = ' ' * 25
+   
+    
+    # Print opening hands for both sides
     handDisplay()
 
 
