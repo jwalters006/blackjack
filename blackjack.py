@@ -5,7 +5,28 @@
 # for shuffling
 import random
 
+# Create wallet, betting amount, running gain/loss tally, and wallet and tally update function
+wallet = 100
+tally = 0
 
+def updateWin():
+    global wallet
+    global tally
+    global bet
+    wallet += bet
+    tally += bet
+    print('Your wallet increased by ', bet, '!')
+    print('Your current sessions winnings(losses) are ', tally, '.')
+
+def updateLose():
+    global wallet
+    global tally
+    global bet
+    wallet -= bet
+    tally -= bet
+    print('Your wallet decreased by ', bet, '!')
+    print('Your current sessions winnings(losses) are ', tally, '.')
+    
 # Create list of every card in a deck, with possible values as second component,
 # in a tuple.  Aces all have a third item in the tuple as the alternate low value.
 suits = ['Clubs', 'Spades', 'Diamonds', 'Hearts']
@@ -50,6 +71,24 @@ def fullhandDisplay():
 # Wrap everything in a while loop
 while True:
 
+    # Show current wallet and prompt for betting amount
+    print('\nCurrent wallet: ', '$', wallet)
+    print('\nGain or loss for this session: ', '$', tally, '\n')
+    bet = input('Please enter an amount to bet: ')
+
+    # Catch for anything that is either not a digit or is not between 1 and the current wallet
+    while True:
+        try:
+            bet = int(bet)
+            while bet < 1 or bet > wallet:
+                print('Your current wallet is ', wallet, '.')
+                bet = int(input('Please enter a bet between 1 and your current wallet: '))
+            break
+        except:
+            bet = input('Please enter a digit between 1 and your current wallet: ')
+            continue
+            
+        
     # Create clean copy of deck to be used for game.
     game_deck = deck.copy()
 
@@ -186,16 +225,29 @@ while True:
         print('\nPush!')
     elif 22 > L > M:
         print('\nYou win!!!')
+        updateWin()
     elif 22 > M > L:
         print('\nYou lose...')
+        updateLose()
     elif L > 21:
         print('\nYou lose...')
+        updateLose()
     elif M > 21:
         print('\nDealer busts! You win!!!')
+        updateWin()
+
+    # Once the hand is finished, your wallet is checked to see if it is still positive.  If not, you are ejected from the game...
+
+    if wallet < 1:
+        print('You have nothing left in your wallet. \nThe bouncer will now show you to the door...')
+        print('Thanks for playing!')
+        break
        
     # Finally, the game asks if you wish to continue and exits on a 'q' or a 'Q'.
     another = input('\nWant to quit? If so, type "Q".  Press enter to continue with another game.')
     if another.upper() == 'Q':
+        print('You end the game with a total gain(loss) of: ', tally, '...')
+        print('Your wallet amount ends at: ', wallet, '...')
         print('Thanks for playing!')
         break
 
