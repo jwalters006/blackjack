@@ -1,31 +1,75 @@
 # Blackjack - A text-based thrill-ride
 # Copyright 2015 Jeff Walters
 
+# To store high scores and data
+import shelve
 
-# for shuffling
+# For shuffling
 import random
 
-# Create wallet, betting amount, running gain/loss tally, and wallet and tally update function
-wallet = 100
-tally = 0
+# Create player class
+class Player:
+    def __init__(self, name, score=0, wallet=100):
+        self.name = name
+        self.score = score
+        self.wallet = wallet
 
+# Create function to update player's top single-session score and cumulative wallet
+def updateDb():
+    global wallet, tally
+    db = shelve.open('highscores')
+    if player.score < tally:
+        player.score = tally
+    player.wallet = wallet
+    db[name] = player
+    db.close()
+    
+# Create function to display player history and scores
+def displayDb():
+    db = shelve.open('highscores')
+    print('\nPlayers that have played:\n')
+    print(LINE_OF_DASHES)
+    for player in db:
+        print('Player name: ', player, '\t', 'Wallet: ', db[player].wallet,
+              '\t', 'Single session high score: ', db[player].score)
+    print(LINE_OF_DASHES)
+    db.close()
+
+
+# Create functions to updated running gain/loss tally and wallet, win or lose
 def updateWin():
-    global wallet
-    global tally
-    global bet
+    global wallet, tally, bet
     wallet += bet
     tally += bet
     print('Your wallet increased by ', bet, '!')
     print('Your current sessions winnings(losses) are ', tally, '.')
 
 def updateLose():
-    global wallet
-    global tally
-    global bet
+    global wallet, tally, bet
     wallet -= bet
     tally -= bet
     print('Your wallet decreased by ', bet, '!')
     print('Your current sessions winnings(losses) are ', tally, '.')
+
+
+
+
+# Create player name and create class instance
+tally = 0
+name = input('Please enter your name: ')
+db = shelve.open('highscores')
+if name not in list(db.keys()):
+    player = Player(name)
+    print('Welcome, ', name, '!',sep='')
+    wallet = player.wallet
+    print('As a new player, your wallet will start at: ', wallet, '.', sep='')
+else:
+    player = db[name]
+    print('Welcome back, ', name, '!', sep='')
+    wallet = player.wallet
+    print('Carrying over from last time, your wallet is: ', wallet, '.', sep='')
+db.close()
+
     
 # Create list of every card in a deck, with possible values as second component,
 # in a tuple.  Aces all have a third item in the tuple as the alternate low value.
@@ -39,7 +83,7 @@ deck = [(card[0] + ' of '+ suit, card[1], card[2]) for
 
 
 # Create line of dashes
-LINE_OF_DASHES = '-' * 50
+LINE_OF_DASHES = '-' * 71
     
 # Create spacing
 LINE_OF_SPACES = ' ' * 25
@@ -106,10 +150,6 @@ while True:
         player_hand.append(game_deck.pop(0))
         opponent_hand.append(game_deck.pop(0))
    
-    
-    # Print opening hands for both sides
-    handDisplay()
-
 
     # Look at values of each card in both sides' hands, build them into lists, and
     # then sum the lists.
@@ -134,113 +174,144 @@ while True:
     L = sum(l)
     M = sum(m)
 
+    # Look for blackjack in player and dealer hands
+    player_blackjack = False
+    opponent_blackjack = False
+    
+    for x in player_hand:
+        if 'Ace' in x[0]:
+            for y in player_hand:
+                if 'Jack' in y[0]:
+                    player_blackjack = True
+
+    for x in opponent_hand:
+        if 'Ace' in x[0]:
+            for y in opponent_hand:
+                if 'Jack' in y[0]:
+                    opponent_blackjack = True
+
+    if player_blackjack and opponent_blackjack:
+        fullhandDisplay()
+        print('All hands are blackjack... Push!!!')
+        
+    elif player_blackjack:
+        fullhandDisplay()
+        print('You win with a blackjack!!!')
+        updateWin()
+    elif opponent_blackjack:
+        fullhandDisplay()
+        print('Dealer has blackjack... you lose!!!')
+        updateLose()
+    else:
+        #Print opening hands for both sides
+        handDisplay()
+
+        print('\n\nYour hand is worth', L, 'points.')
+        print('\nDealer\'s hand so far shows', opponent_hand[0][1], 'points.')
 
 
 
-    print('\n\nYour hand is worth', L, 'points.')
-    print('\nDealer\'s hand so far shows', opponent_hand[0][1], 'points.')
-
-
-
-    # This code prompts the player to hit or to stay.  If the player elects to hit, another card is popped off
-    # the game deck and put into the player's hand.  There are "if tests" to detect if the card is an Ace.  If the
-    # card is detected as being an Ace, it is set to a low Ace if the current hand points total is higher than 12,
-    # to avoid busting.
-    while L < 22:
-        decision = input('\nType "H" to hit.  Type "S" to stand.')
-        if decision.upper() == 'H':
-            player_hand.append(game_deck.pop(0))
-            print('\nYou draw', player_hand[-1][0])
-            if player_hand[-1][1] == 11:
-                if L > 12:
-                    l.append(player_hand[-1][2])
+        # This code prompts the player to hit or to stay.  If the player elects to hit, another card is popped off
+        # the game deck and put into the player's hand.  There are "if tests" to detect if the card is an Ace.  If the
+        # card is detected as being an Ace, it is set to a low Ace if the current hand points total is higher than 12,
+        # to avoid busting.
+        while L < 22:
+            decision = input('\nType "H" to hit.  Type "S" to stand.')
+            if decision.upper() == 'H':
+                player_hand.append(game_deck.pop(0))
+                print('\nYou draw', player_hand[-1][0])
+                if player_hand[-1][1] == 11:
+                    if L > 12:
+                        l.append(player_hand[-1][2])
+                    else:
+                        l.append(player_hand[-1][1])
                 else:
                     l.append(player_hand[-1][1])
-            else:
-                l.append(player_hand[-1][1])
-            if sum(l) > 21:
-                l.sort()
-                if l[-1] == 11:
-                    l[-1] = 1
-                                                          
+                if sum(l) > 21:
+                    l.sort()
+                    if l[-1] == 11:
+                        l[-1] = 1
+                                                              
+                L = sum(l)
+                handDisplay()
+                print('\nYour hand is now worth', L, 'points.')
+            elif decision.upper() == 'S':
+                print('\nStanding with:', L, 'points.')
+                input('Press enter to continue...')
+                break
             L = sum(l)
-            handDisplay()
-            print('\nYour hand is now worth', L, 'points.')
-        elif decision.upper() == 'S':
-            print('\nStanding with:', L, 'points.')
-            input('Press enter to continue...')
-            break
-        L = sum(l)
 
 
-    # If, after all of the preceding events have left a player with a hand over 21, this prints a "losing" message.  
-    if L > 21:
-        print('With', L, 'points, you bust!')
-     
-        
-    else:
-        print('\nDealer\'s other card is a', opponent_hand[1][0])
-        fullhandDisplay()
-        print('Dealer\'s full hand shows', M, 'points.')
-        print('\n')
-        input('Press enter to continue...')
-
-        print('\n')
-
-
-        # This section of code evaluates and prints out pertinent details of the dealer's hand.  The dealer will hit on hands
-        # below 18.  This code also accounts for low and high values of aces, and will adjust them accordingly for the highest point
-        # total possible without busting.
-        while M < 22:
-            if M > 17:
-                print('Dealer stands.')
-                print('Dealer\'s final hand shows', M, 'points against your hand of', L, 'points.')
-                break
-            elif M > 21:
-                print('Dealer busts!')
-                break
-            opponent_hand.append(game_deck.pop(0))
-            print('Dealer draws', opponent_hand[-1][0])
+        # If, after all of the preceding events have left a player with a hand over 21, this prints a "losing" message.  
+        if L > 21:
+            print('With', L, 'points, you bust!')
+         
+            
+        else:
+            print('\nDealer\'s other card is a', opponent_hand[1][0])
             fullhandDisplay()
-            if opponent_hand[-1][1] == 11:
-                if M > 12:
-                    m.append(opponent_hand[-1][2])
+            print('Dealer\'s full hand shows', M, 'points.')
+            print('\n')
+            input('Press enter to continue...')
+
+            print('\n')
+
+
+            # This section of code evaluates and prints out pertinent details of the dealer's hand.  The dealer will hit on hands
+            # below 18.  This code also accounts for low and high values of aces, and will adjust them accordingly for the highest point
+            # total possible without busting.
+            while M < 22:
+                if M > 17:
+                    print('Dealer stands.')
+                    print('Dealer\'s final hand shows', M, 'points against your hand of', L, 'points.')
+                    break
+                elif M > 21:
+                    print('Dealer busts!')
+                    break
+                opponent_hand.append(game_deck.pop(0))
+                print('Dealer draws', opponent_hand[-1][0])
+                fullhandDisplay()
+                if opponent_hand[-1][1] == 11:
+                    if M > 12:
+                        m.append(opponent_hand[-1][2])
+                    else:
+                        m.append(opponent_hand[-1][1])
                 else:
                     m.append(opponent_hand[-1][1])
-            else:
-                m.append(opponent_hand[-1][1])
 
-            if sum(m) > 21:
-                m.sort()
-                if m[-1] == 11:
-                    m[-1] = 1
-                
-            M = sum(m)
-            print('Dealer\'s hand now shows', M, 'points against your hand of', L, 'points.')
-            input('\nPress enter to continue...\n')
+                if sum(m) > 21:
+                    m.sort()
+                    if m[-1] == 11:
+                        m[-1] = 1
+                    
+                M = sum(m)
+                print('Dealer\'s hand now shows', M, 'points against your hand of', L, 'points.')
+                input('\nPress enter to continue...\n')
 
 
-    # This code evaluates final scores once more and prints an appropriate message.       
-    if 22 > L == M:
-        print('\nPush!')
-    elif 22 > L > M:
-        print('\nYou win!!!')
-        updateWin()
-    elif 22 > M > L:
-        print('\nYou lose...')
-        updateLose()
-    elif L > 21:
-        print('\nYou lose...')
-        updateLose()
-    elif M > 21:
-        print('\nDealer busts! You win!!!')
-        updateWin()
+        # This code evaluates final scores once more and prints an appropriate message.       
+        if 22 > L == M:
+            print('\nPush!')
+        elif 22 > L > M:
+            print('\nYou win!!!')
+            updateWin()
+        elif 22 > M > L:
+            print('\nYou lose...')
+            updateLose()
+        elif L > 21:
+            print('\nYou lose...')
+            updateLose()
+        elif M > 21:
+            print('\nDealer busts! You win!!!')
+            updateWin()
 
     # Once the hand is finished, your wallet is checked to see if it is still positive.  If not, you are ejected from the game...
 
     if wallet < 1:
         print('You have nothing left in your wallet. \nThe bouncer will now show you to the door...')
-        print('Thanks for playing!')
+        print('\nThanks for playing ', name, '!', sep='')
+        updateDb()
+        displayDb()
         break
        
     # Finally, the game asks if you wish to continue and exits on a 'q' or a 'Q'.
@@ -248,7 +319,7 @@ while True:
     if another.upper() == 'Q':
         print('You end the game with a total gain(loss) of: ', tally, '...')
         print('Your wallet amount ends at: ', wallet, '...')
-        print('Thanks for playing!')
+        print('\nThanks for playing ', name,'!', sep='')
+        updateDb()
+        displayDb()
         break
-
-        
