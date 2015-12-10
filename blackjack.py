@@ -9,10 +9,12 @@ import random
 
 # Create player class
 class Player:
-    def __init__(self, name, score=0, wallet=100):
+    def __init__(self, name, score=0, wallet=100, win=0, loss=0):
         self.name = name
         self.score = score
         self.wallet = wallet
+        self.win = win
+        self.loss = loss
 
 # Create function to update player's top single-session score and cumulative wallet
 def updateDb():
@@ -31,7 +33,8 @@ def displayDb():
     print(LINE_OF_DASHES)
     for player in db:
         print('Player name: ', player, '\t', 'Wallet: ', db[player].wallet,
-              '\t', 'Single session high score: ', db[player].score)
+              '\t', 'Wins: ', db[player].win, '\t', 'Losses: ', db[player].loss, '\t',
+              'Best point streak: ', db[player].score)
     print(LINE_OF_DASHES)
     db.close()
 
@@ -43,6 +46,7 @@ def updateWin():
     tally += bet
     print('Your wallet increased by ', bet, '!')
     print('Your current sessions winnings(losses) are ', tally, '.')
+    player.win += 1
 
 def updateLose():
     global wallet, tally, bet
@@ -50,6 +54,7 @@ def updateLose():
     tally -= bet
     print('Your wallet decreased by ', bet, '!')
     print('Your current sessions winnings(losses) are ', tally, '.')
+    player.loss += 1
 
 
 
@@ -67,7 +72,11 @@ else:
     player = db[name]
     print('Welcome back, ', name, '!', sep='')
     wallet = player.wallet
-    print('Carrying over from last time, your wallet is: ', wallet, '.', sep='')
+    if wallet == 0:
+        wallet = 50
+        print('OK - looks like you\'ve depleted your wallet.  Here\'s another $50 to get your started.')
+    else:
+        print('Carrying over from last time, your wallet is: ', wallet, '.', sep='')
 db.close()
 
     
@@ -83,7 +92,7 @@ deck = [(card[0] + ' of '+ suit, card[1], card[2]) for
 
 
 # Create line of dashes
-LINE_OF_DASHES = '-' * 71
+LINE_OF_DASHES = '-' * 95
     
 # Create spacing
 LINE_OF_SPACES = ' ' * 25
