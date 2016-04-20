@@ -1,12 +1,11 @@
 # README #
 
-# Leaving Template README file here for now.... #
+# Blackjack and Blackjack GUI #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+There are two versions of Blackjack included in this repository.  blackjack.py is a simple, text-based version of Blackjack.  It was first real program, outside of "Hello World" tutorials and the like. blackjackgui_1.1.py is an updated version that utilizes Tkinter for the GUI as well as pygame for sound effects.
 
 ### What is this repository for? ###
 
-* This is a simple, text-based version of Blackjack.  It's my first real program, outside of "Hello World" tutorials and the like.
 * 1.01
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
