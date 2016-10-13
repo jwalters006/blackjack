@@ -7,8 +7,8 @@ import shelve
 # For shuffling
 import random
 
-# To import special module for hand splitting
-#from handsplit import handSplit as handSplit
+# To import special module for hand splitting (under construction)
+# from handsplit import handSplit as handSplit
 
 # Create player class
 class Player:
@@ -19,7 +19,7 @@ class Player:
         self.win = win
         self.loss = loss
 
-# Create function to update player's top single-session score and cumulative wallet
+# Create function to update player's top single-session score and cumulative wallet and save to a database file
 def updateDb():
     global wallet, tally
     db = shelve.open('highscores')
@@ -49,7 +49,7 @@ def displayDb():
     db.close()
 
 
-# Create functions to updated running gain/loss tally and wallet, win or lose
+# Create functions to update running gain/loss tally and wallet, win or lose
 def updateWin():
     global wallet, tally, bet
     if player_blackjack == True:
@@ -127,20 +127,22 @@ def handDisplay():
     print('\n\n', LINE_OF_DASHES,'\nYour hand:\n', sep='')
     for x in player_hand:
         print(LINE_OF_SPACES, x[0])
+    print('Value of hand: ' + str(L))
     print("\n\nDealer's hand:\n")
-    print(LINE_OF_SPACES, opponent_hand[0][0])
+    print(LINE_OF_SPACES, opponent_hand[0][0])    
     print(LINE_OF_SPACES, 'Unknown')
     print(LINE_OF_DASHES)
-
-# Create function to print player's full hand as well as the dealer's full
-# hand
+ 
+# Create function to print player's full hand as well as the dealer's full hand
 def fullhandDisplay():
     print('\n\n', LINE_OF_DASHES,'\nYour hand:\n', sep='')
     for x in player_hand:
         print(LINE_OF_SPACES, x[0])
+    print('Value of hand: ' + str(L))
     print("\n\nDealer's hand:\n")
     for x in opponent_hand:
         print(LINE_OF_SPACES, x[0])
+    print('Value of hand: ' + str(M))
     print(LINE_OF_DASHES)
     
     
@@ -305,7 +307,7 @@ su(R)render\t- Forfeit this game and lose half of your initial bet\n\nCommand: '
                 break
 
 #            elif decision.upper() == 'P':
-#                if len(player_hand) == 2 and wallet >= (bet * 2) and player_hand[0][1] != player_hand[1][1]:
+#                if len(player_hand) == 2 and wallet >= (bet * 2) and player_hand[0][1] == player_hand[1][1]:
 #                    handSplit(player_hand)
 #                    break
 #                else:
@@ -350,7 +352,6 @@ su(R)render\t- Forfeit this game and lose half of your initial bet\n\nCommand: '
                     break
                 opponent_hand.append(game_deck.pop(0))
                 print('Dealer draws', opponent_hand[-1][0])
-                fullhandDisplay()
                 if opponent_hand[-1][1] == 11:
                     if M > 12:
                         m.append(opponent_hand[-1][2])
@@ -365,6 +366,8 @@ su(R)render\t- Forfeit this game and lose half of your initial bet\n\nCommand: '
                         m[-1] = 1
                     
                 M = sum(m)
+                fullhandDisplay()
+
                 print('Dealer\'s hand now shows', M, 'points against your hand of', L, 'points.')
                 input('\nPress enter to continue...\n')
 
