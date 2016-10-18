@@ -413,6 +413,7 @@ tally = 0
 root = Tk()
 root.title('Blackjack - by Jeff Walters')
 main = ttk.Frame(root, width=800, height=600, padding=(3, 3, 12, 12))
+root.resizable(width=False, height=False)
 
 # Add various images
 graphicspath = 'Graphics\\'
