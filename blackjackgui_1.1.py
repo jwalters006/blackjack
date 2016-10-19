@@ -508,7 +508,7 @@ def fullhandDisplay():
         count+=1
             
 # Create playing card labels
-defimage = PhotoImage(file=imagepath+'red_joker.png').subsample(6,6)
+defimage = PhotoImage(file=imagepath+'blank.png').subsample(6,6)
 dealercardlabel = {}
 playercardlabel = {}
 for x in range(0, 20):
@@ -544,23 +544,6 @@ dealercardlabel['0'].grid(column=3, row=2)
 dealercardlabel['1'].grid(column=4, row=2)
 playercardlabel['0'].grid(column=3, row=3)
 playercardlabel['1'].grid(column=4, row=3)
-
-# Configure scalability for window
-root.columnconfigure(0, weight=1)
-root.rowconfigure(0, weight=1)
-main.columnconfigure(0, weight=3)
-main.columnconfigure(1, weight=3)
-main.columnconfigure(2, weight=3)
-main.columnconfigure(3, weight=1)
-main.columnconfigure(4, weight=1)
-main.columnconfigure(5, weight=1)
-main.columnconfigure(6, weight=1)
-main.columnconfigure(7, weight=1)
-main.columnconfigure(8, weight=1)
-main.columnconfigure(9, weight=1)
-main.columnconfigure(10, weight=1)
-main.columnconfigure(11, weight=1)
-main.rowconfigure(1, weight=1)
 
 # Set default name entry command for return key
 name_entry.focus()
