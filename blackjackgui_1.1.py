@@ -90,6 +90,7 @@ def updateWin():
         textoutput.image_create('end', image=bjgraphics)
     else:
         textoutput.image_create('end', image=wingraphics)
+    text('\n\n')
     updateDb()
     hitbutton.state(['disabled'])
     standbutton.state(['disabled'])
@@ -105,6 +106,7 @@ def updateLose():
     player.loss += 1
     losesound.play()
     textoutput.image_create('end', image=losegraphics)
+    text('\n\n')
     updateDb()
     hitbutton.state(['disabled'])
     standbutton.state(['disabled'])
@@ -123,6 +125,7 @@ def updateDraw():
     dbldownbutton.state(['disabled'])
     pushsound.play()
     textoutput.image_create('end', image=pushgraphics)
+    text('\n\n')
     updateDb()
     startGame()
 
@@ -434,7 +437,7 @@ betamountentry = StringVar()
 
 # Create entry fields for inputting player name ane betting amounts
 name_entry = ttk.Entry(main, width=15, textvariable=playernmentry)
-bet_entry = ttk.Entry(main, width=15, textvariable=betamountentry, state='disabled')
+bet_entry = ttk.Entry(main, width=10, textvariable=betamountentry, state='disabled')
 
 # Create small text labels
 dealerlbl = ttk.Label(main, text='Dealer')
@@ -488,7 +491,7 @@ def handDisplay():
     while count < len(player_hand):
         pimage[str(count)] = player_hand[count].image
         playercardlabel[str(count)]['image'] = pimage[str(count)]
-        playercardlabel[str(count)].grid(column=count+3, row=3)
+        playercardlabel[str(count)].grid(column=count+2, row=3)
         count+=1
         
 def fullhandDisplay():
@@ -504,7 +507,7 @@ def fullhandDisplay():
     while count < len(opponent_hand):
         dimage[str(count)] = opponent_hand[count].image
         dealercardlabel[str(count)]['image'] = dimage[str(count)]
-        dealercardlabel[str(count)].grid(column=count+3, row=2)
+        dealercardlabel[str(count)].grid(column=count+2, row=2)
         count+=1
             
 # Create playing card labels
@@ -521,12 +524,12 @@ text('Please enter your name in the entry box above.\n')
 # Grid all widgets
 main.grid(column=0, row=0, sticky='nsew')
 name_entry.grid(column=1, row=1, sticky='w')
-dealerlbl.grid(column=1, row=2, sticky='e')
-playerlbl.grid(column=1, row=3, sticky='e')
-walletlbl.grid(column=1, row=5)
-betlbl.grid(column=1, row=6)
+dealerlbl.grid(column=1, row=2, sticky='')
+playerlbl.grid(column=1, row=3, sticky='')
+walletlbl.grid(column=1, row=5, sticky='e')
+betlbl.grid(column=1, row=6, sticky='e')
 enterbetlbl.grid(column=1, row=7)
-beginbutton.grid(column=2, row=1, sticky='w')
+beginbutton.grid(column=2, columnspan=2, row=1, sticky='w')
 textoutput.grid(column=2, columnspan=15, row=4, sticky='nswe')
 walletamountlbl.grid(column=2, row=5)
 betamountlbl.grid(column=2, row=6)
@@ -540,10 +543,10 @@ playerscorelbl.grid(column=15, row=3, sticky='nswe')
 standbutton.grid(column=15, row=6, sticky='nswe')
 displaybutton.grid(column=16, row=1, sticky='nswe')
 quitbutton.grid(column=16, row=6, sticky='nswe')
-dealercardlabel['0'].grid(column=3, row=2)
-dealercardlabel['1'].grid(column=4, row=2)
-playercardlabel['0'].grid(column=3, row=3)
-playercardlabel['1'].grid(column=4, row=3)
+dealercardlabel['0'].grid(column=2, row=2)
+dealercardlabel['1'].grid(column=3, row=2)
+playercardlabel['0'].grid(column=2, row=3)
+playercardlabel['1'].grid(column=3, row=3)
 
 # Set default name entry command for return key
 name_entry.focus()
