@@ -400,9 +400,9 @@ def deal(*args):
         
     else:
         #Print opening hands for both sides
-        handDisplay()
-        text('\nYour hand is worth ', L, ' points.\n')
-        text('Dealer\'s hand so far shows ', opponent_hand[0].value1, ' points.\n')
+        handDisplay()        
+        text('\nDealer\'s hand so far shows ', opponent_hand[0].value1, ' points.\n')
+        text('Your hand is worth ', L, ' points.\n')
 
 # Create value for default width of textbox and create line of dashes variable
 textwidth = 65
